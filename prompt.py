@@ -24,14 +24,14 @@ def getEmoji(title, exclusion):
 			{"role": "user", "content": prompt},
 		],
 	)
-	#print(response.choices[0].message.content)
+	print(response.choices[0].message.content)
 	return response.choices[0].message.content
 
 def makeEmoji(title):
 	gpt_model_name = "gpt-4"
 	dall_model_name = "dall-e-3"
 
-	print(title)
+	print("title:" + title)
 	prompt = "「" + title + "」というタイトルにふさわしいオリジナルの絵文字を作りたいのですが、それに役立ちそうなプロンプトを5つほど英単語で出力してください。ただし、「Emoji」はこちら側で追加するのでプロンプトに入れないでください。"
 	image_prompt = openai.chat.completions.create(
 		model=gpt_model_name,
@@ -54,8 +54,9 @@ def makeEmoji(title):
 	)
 	image_url = response.data[0].url
 	print(image_url)
+	return(image_url)
 
 #print(getEmoji("Whisperで文字起こしをした議事録の発話者の名前を自動的に判定する！",[]))
-makeEmoji("Whisperで文字起こしをした議事録の発話者の名前を自動的に判定する！")
+#makeEmoji("Whisperで文字起こしをした議事録の発話者の名前を自動的に判定する！")
 
 
