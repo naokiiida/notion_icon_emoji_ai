@@ -1,0 +1,2 @@
+# notion_icon_emoji_ai
+NotionページのタイトルにあったアイコンをUnicode絵文字から選ぶ
