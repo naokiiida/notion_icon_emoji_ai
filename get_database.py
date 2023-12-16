@@ -1,8 +1,9 @@
 import requests
 import openai
 from datetime import datetime, timedelta, timezone
+from pipedream.script_helpers import (steps, export)
 
-openai.api_key = ""
+openai.api_key = "バゼルギウス殴りたい"
 def getEmoji(title, exclusion):
 	model_name = "gpt-4"
 	excludedEmoji = ""
@@ -43,8 +44,6 @@ def makeEmoji(title):
 			{"role": "user", "content": prompt},
 		],
 	)
-	# print("prompt:" + image_prompt.choices[0].message.content)
-	# print("レジギ、ガガガガガwww")
 	response = openai.images.generate(
 		model=dall_model_name,
 		prompt=image_prompt.choices[0].message.content + ",simple,anime,Emoji",
@@ -75,8 +74,6 @@ def updatePageIconCover(page_id,icon,cover):
 				"url": cover
 			}
 		}
-
-
 	}
 	response = requests.patch(url, headers=headers, json=data)
 	# Check the response status code
@@ -125,24 +122,15 @@ def get_database_pages(database_id, notion_token):
 	
 	if response.status_code == 200:
 		data = response.json()
-		print(data)
-		
-		
 		pages = data.get('results', [])
-
-		#print(pages)
-		for page in pages:
-			page_id = page.get('id')
-			last_edit = datetime.fromisoformat(page.get('last_edited_time')[:-1]).replace(tzinfo=timezone.utc)
-			print(last_edit)
-			print(datetime.now(timezone.utc) - last_edit)
-			if (datetime.now(timezone.utc) - last_edit < timedelta(minutes=1)):
-				page_title = page.get('properties').get('名前').get('title')[0].get('plain_text')
-				print(page_title)
-				updatePageIconCover(page_id,
-				getEmoji(page_title,[]),
-				"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
-				)
+		print(steps)
+		page_id = steps['trigger']['event']['id']
+		page_title = steps['trigger']['event'].get('properties').get('名前').get('title')[0].get('plain_text')
+		print(page_title)
+		updatePageIconCover(page_id,
+		getEmoji(page_title,[]),
+		"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+		)
 	else:
 		print(f"Error: {response.status_code} - {response.text}")
 
