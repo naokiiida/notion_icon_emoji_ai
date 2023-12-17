@@ -3,7 +3,7 @@ import openai
 from datetime import datetime, timedelta, timezone
 from pipedream.script_helpers import (steps, export)
 
-openai.api_key = "バゼルギウス殴りたい"
+openai.api_key = "オロミドロ死ね"
 def getEmoji(title, exclusion):
 	model_name = "gpt-4"
 	excludedEmoji = ""
@@ -127,15 +127,22 @@ def get_database_pages(database_id, notion_token):
 		page_id = steps['trigger']['event']['id']
 		page_title = steps['trigger']['event'].get('properties').get('名前').get('title')[0].get('plain_text')
 		print(page_title)
-		updatePageIconCover(page_id,
-		getEmoji(page_title,[]),
-		"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
-		)
+		if page_title.endswith("/image"):
+			print("xxxxx")
+			updatePageIconCovers(page_id,
+			makeEmoji(page_title),
+			"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+			)
+		else:
+			updatePageIconCover(page_id,
+			getEmoji(page_title,[]),
+			"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+			)
 	else:
 		print(f"Error: {response.status_code} - {response.text}")
 
 # Replace with your actual Notion database ID and token
 database_id = 'e50391549487443aa999cd5394666154'
-notion_token = ''
+notion_token = 'マガイマガド'
 
 get_database_pages(database_id, notion_token)
