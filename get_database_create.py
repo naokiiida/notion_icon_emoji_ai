@@ -3,7 +3,7 @@ import openai
 from datetime import datetime, timedelta, timezone
 from pipedream.script_helpers import (steps, export)
 
-openai.api_key = "オロミドロ死ね"
+openai.api_key = "フルフルシア"
 def getEmoji(title, exclusion):
 	model_name = "gpt-4"
 	excludedEmoji = ""
@@ -133,10 +133,28 @@ def get_database_pages(database_id, notion_token):
 		print(created)
 		print(last_edit - created)
 		if (last_edit - created > timedelta(seconds=20)):
-			updatePageIconCover(page_id,
-			getEmoji(page_title,[]),
-			"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
-			)
+			if page_title.endswith("/image"):
+				page_title = page_title[:-len("/image")]
+				print("xxxxx")
+				updatePageIconCovers(page_id,
+				makeEmoji(page_title),
+				"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+				,page_title
+				)
+			elif page_title.endswith("/re"):
+				page_title = page_title[:-len("/re")]
+				print("re")
+				updatePageIconCover(page_id,
+				getEmoji(page_title,[steps['trigger']['event']['icon']['emoji']]),
+				"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+				,page_title
+				)
+			else:
+				updatePageIconCover(page_id,
+				getEmoji(page_title,[]),
+				"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+				,page_title
+				)
 		else:
 			print("xxx")
 	else:
@@ -144,6 +162,6 @@ def get_database_pages(database_id, notion_token):
 
 # Replace with your actual Notion database ID and token
 database_id = 'e50391549487443aa999cd5394666154'
-notion_token = 'マガイマガド'
+notion_token = 'もこブロス'
 
 get_database_pages(database_id, notion_token)

@@ -3,7 +3,7 @@ import openai
 from datetime import datetime, timedelta, timezone
 from pipedream.script_helpers import (steps, export)
 
-openai.api_key = "オロミドロ死ね"
+openai.api_key = "フルフルシア"
 def getEmoji(title, exclusion):
 	model_name = "gpt-4"
 	excludedEmoji = ""
@@ -55,7 +55,7 @@ def makeEmoji(title):
 	print(image_url)
 	return(image_url)
 
-def updatePageIconCover(page_id,icon,cover):
+def updatePageIconCover(page_id,icon,cover, title):
 	url = f'https://api.notion.com/v1/pages/{page_id}'
 	headers = {
 		'Authorization': f'Bearer {notion_token}',
@@ -73,7 +73,37 @@ def updatePageIconCover(page_id,icon,cover):
 			"external": {
 				"url": cover
 			}
-		}
+		},
+		'properties': {
+			'タグ': {
+				'id': 'ucdF',
+				'type': 'multi_select',
+				'multi_select': []
+			},
+			'名前': {
+				'id': 'title',
+				'type': 'title',
+				'title': [
+					{
+						'type': 'text',
+						'text': {
+							'content': title,
+							'link': None
+						},
+						'annotations': {
+							'bold': False,
+							'italic': False,
+							'strikethrough': False,
+							'underline': False,
+							'code': False,
+							'color': 'default'
+						},
+						'plain_text': title,
+						'href': None
+					}
+				]
+			}
+		},
 	}
 	response = requests.patch(url, headers=headers, json=data)
 	# Check the response status code
@@ -82,7 +112,7 @@ def updatePageIconCover(page_id,icon,cover):
 	else:
 		print(f"Error: {response.status_code} - {response.text}")
 
-def updatePageIconCovers(page_id,icon,cover):
+def updatePageIconCovers(page_id,icon,cover,title):
 	url = f'https://api.notion.com/v1/pages/{page_id}'
 	headers = {
 		'Authorization': f'Bearer {notion_token}',
@@ -102,8 +132,39 @@ def updatePageIconCovers(page_id,icon,cover):
 			"external": {
 				"url": cover
 			}
+		},
+		'properties': {
+			'タグ': {
+				'id': 'ucdF',
+				'type': 'multi_select',
+				'multi_select': []
+			},
+			'名前': {
+				'id': 'title',
+				'type': 'title',
+				'title': [
+					{
+						'type': 'text',
+						'text': {
+							'content': title,
+							'link': None
+						},
+						'annotations': {
+							'bold': False,
+							'italic': False,
+							'strikethrough': False,
+							'underline': False,
+							'code': False,
+							'color': 'default'
+						},
+						'plain_text': title,
+						'href': None
+					}
+				]
+			}
 		}
 	}
+
 	response = requests.patch(url, headers=headers, json=data)
 	# Check the response status code
 	if response.status_code == 200:
@@ -128,21 +189,32 @@ def get_database_pages(database_id, notion_token):
 		page_title = steps['trigger']['event'].get('properties').get('名前').get('title')[0].get('plain_text')
 		print(page_title)
 		if page_title.endswith("/image"):
+			page_title = page_title[:-len("/image")]
 			print("xxxxx")
 			updatePageIconCovers(page_id,
 			makeEmoji(page_title),
 			"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+			,page_title
+			)
+		elif page_title.endswith("/re"):
+			page_title = page_title[:-len("/re")]
+			print("re")
+			updatePageIconCover(page_id,
+			getEmoji(page_title,[steps['trigger']['event']['icon']['emoji']]),
+			"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+			,page_title
 			)
 		else:
 			updatePageIconCover(page_id,
 			getEmoji(page_title,[]),
 			"https://imgs.search.brave.com/6fTvlNCu_1QhwU2Qf_-GsElwPVdyAnL0h0u7ftNiZk4/rs:fit:500:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzLzM4LzRh/Lzk1LzM4NGE5NTM1/ZWU3ZjU4OTI0NDA0/MWM2YmMyMTg2NjMw/LmpwZw"
+			,page_title
 			)
 	else:
 		print(f"Error: {response.status_code} - {response.text}")
 
 # Replace with your actual Notion database ID and token
 database_id = 'e50391549487443aa999cd5394666154'
-notion_token = 'マガイマガド'
+notion_token = 'もこブロス'
 
 get_database_pages(database_id, notion_token)
